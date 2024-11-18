@@ -15,7 +15,7 @@ export const GET_ITEMS = gql`
       name_item
       description_item
       state_item
-      priority_item
+      priority_item 
     }
   }
 `;

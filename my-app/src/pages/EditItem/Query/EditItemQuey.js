@@ -28,3 +28,15 @@ export const UPDATE_ITEM = gql`
     }
   }
 `;
+
+export const GET_ITEM_BY_ID = gql`
+  query GetItemById($id: Int!) {
+    item_by_pk(id_item: $id) {
+      id_item
+      name_item
+      description_item
+      state_item
+      priority_item
+    }
+  }
+`;

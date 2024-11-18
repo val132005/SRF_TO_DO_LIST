@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { TextField, Button, MenuItem, Select, FormControl, InputLabel, Typography } from '@mui/material';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useMutation } from '@apollo/client';
+import { useMutation, useQuery } from '@apollo/client';
 import ResponsiveAppBarNormal from '../../../assets/ResponsiveAppBarLogged';
 import '../Style/EditItem.css';
-import { UPDATE_ITEM } from '../Query/EditItemQuey';
+import { UPDATE_ITEM, GET_ITEM_BY_ID } from '../Query/EditItemQuey';
 import { GET_ITEMS, GET_TODOLIST_ID } from '../../TaskTable/Query/TaskTableQuery';
 
 const EditItem = () => {
@@ -15,6 +15,10 @@ const EditItem = () => {
   const [priority, setPriority] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
+
+  const { data, loading: queryLoading, error: queryError } = useQuery(GET_ITEM_BY_ID, {
+    variables: { id: parseInt(id) },
+  });
 
   const [updateTask, { loading, error: mutationError }] = useMutation(UPDATE_ITEM, {
     update: (cache, { data: { update_item_by_pk } }) => {
@@ -47,7 +51,15 @@ const EditItem = () => {
       setError("Hubo un error al actualizar la tarea. Intenta nuevamente.");
     },
   });
-  
+
+  useEffect(() => {
+    if (data?.item_by_pk) {
+      setTaskTitle(data.item_by_pk.name_item || "");
+      setTaskDescription(data.item_by_pk.description_item || "");
+      setStatus(data.item_by_pk.state_item || "");
+      setPriority(data.item_by_pk.priority_item || "");
+    }
+  }, [data]);
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
