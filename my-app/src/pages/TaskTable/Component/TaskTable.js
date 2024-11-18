@@ -1,4 +1,3 @@
-// src/components/TaskTable.js
 import React, { useState, useEffect } from "react";
 import {
   Table,
@@ -17,8 +16,8 @@ import "../Style/TaskTable.css";
 import ResponsiveAppBarLogged from '../../../assets/ResponsiveAppBarLogged';
 import { useQuery, gql, useMutation } from "@apollo/client";
 import { GET_TODOLIST_ID, GET_ITEMS, DELETE_ITEM } from '../Query/TaskTableQuery';
-import { Dialog, DialogActions, DialogContent, DialogTitle, Button } from '@mui/material';
 import TaskDetailsDialog from './TaskDetailsDialog'; // Importa el nuevo componente
+import DeleteTaskDialog from './DeleteTaskDialog'; // Importa el nuevo componente de diálogo para eliminar tarea
 
 const TaskTable = () => {
   const navigate = useNavigate();
@@ -97,10 +96,8 @@ const TaskTable = () => {
     },
   });
 
-  const handleDeleteTask = () => {
-    if (selectedTask) {
-      deleteItem({ variables: { id_item: selectedTask.id } });
-    }
+  const handleDeleteTask = (task) => {
+    deleteItem({ variables: { id_item: task.id } });
   };
 
   if (loadingTodolist || loading) return <p>Loading...</p>;
@@ -188,20 +185,12 @@ const TaskTable = () => {
       </div>
 
       {/* Diálogo de confirmación para eliminar tarea */}
-      <Dialog open={openConfirmDialog} onClose={handleCloseConfirmDialog}>
-        <DialogTitle>Confirmación</DialogTitle>
-        <DialogContent>
-          <p>¿Estas seguro de que desea eliminar este item?</p>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseConfirmDialog} color="primary">
-            Cancelar
-          </Button>
-          <Button onClick={handleDeleteTask} color="primary">
-            Eliminar
-          </Button>
-        </DialogActions>
-      </Dialog>
+      <DeleteTaskDialog
+        open={openConfirmDialog}
+        onClose={handleCloseConfirmDialog}
+        onDelete={handleDeleteTask}
+        task={selectedTask}
+      />
 
       {/* Diálogo de detalles de la tarea */}
       <TaskDetailsDialog
