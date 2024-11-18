@@ -1,0 +1,103 @@
+/* Estilos para el contenedor principal */
+.tableClassDiv {
+    display: flex;
+    justify-content: center; /* Centra horizontalmente */
+    align-items: flex-start; /* Alinea al principio del contenedor (para evitar que se centre verticalmente) */
+    min-height: calc(100vh - 50px); /* Resta la altura de la barra de navegación */
+    padding-top: 50px; /* Da espacio arriba para la barra de navegación */
+    width: 100%; /* Asegúrate de que el contenedor ocupe todo el ancho disponible */
+}
+
+/* Contenedor de la tabla */
+.tableDivCont {
+    width: 80%; /* Ajusta el ancho según lo necesites */
+    max-width: 1200px; /* Limita el ancho máximo */
+    margin: 0 auto; /* Fuerza el centrado horizontal */
+}
+
+/* Resto de tus estilos para la tabla */
+.MuiTable-root {
+    border-collapse: separate;
+    border-spacing: 0;
+    width: 100%;
+}
+
+.MuiTableCell-root {
+    padding: 16px;
+    font-size: 14px;
+}
+
+.MuiTableSortLabel-root {
+    font-weight: bold;
+    color: #1976d2;
+}
+
+.MuiTableHead-root {
+    background-color: #f1f1f1;
+    color: #333;
+}
+
+.MuiTablePagination-root {
+    background-color: #fafafa;
+}
+
+.MuiToolbar-root {
+    background-color: #1976d2;
+    color: white;
+    border-radius: 8px 8px 0 0;
+}
+
+.MuiCheckbox-root {
+    color: #1976d2;
+}
+
+.MuiTableRow-root:hover {
+    background-color: #e3f2fd;
+    cursor: pointer;
+}
+
+/* Styling the selected row */
+.Mui-selected {
+    color: white;
+}
+
+/* Table Pagination */
+.MuiTablePagination-spacer {
+    display: none;
+}
+
+.MuiTablePagination-select {
+    margin-left: 10px;
+    font-size: 14px;
+}
+
+.MuiTablePagination-actions {
+    display: flex;
+    align-items: center;
+}
+
+.MuiTypography-root {
+    font-weight: 500;
+    font-size: 16px;
+}
+
+/* Adjustments for the form control and switch */
+.MuiFormControlLabel-root {
+    margin-left: 20px;
+}
+
+.MuiSwitch-root {
+    color: #1976d2;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .tableClassDiv {
+        padding: 10px;
+    }
+
+    .tableDivCont {
+        width: 100%;
+        margin-top: 20px;
+    }
+}

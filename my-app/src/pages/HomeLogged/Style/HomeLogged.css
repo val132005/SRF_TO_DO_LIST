@@ -1,0 +1,73 @@
+/* Fondo negro y sin bordes */
+html, body {
+    background-color: rgb(246, 242, 242) !important; /* Fondo negro */
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    height: 100%; /* Aseguramos que el body ocupe todo el espacio de la pantalla */
+  }
+  
+  /* Contenedor centralizado */
+  .container {
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    text-align: center;
+    margin-top: 0; /* Elimina espacio superior */
+    padding-top: 150px;
+  }
+
+  .nav-var-1{
+    margin-bottom: 0; /* Elimina espacio superior */
+    padding-bottom: 0px;
+  }
+  
+  /* Título con borde degradado solo en la parte inferior de cada letra */
+  .title {
+    font-size: 3rem;
+    margin-bottom: 30px;
+    margin-top: 10px; /* Reduce espacio superior del título */
+    margin-bottom: 20px;
+    color: rgb(0, 0, 0); /* Color del texto */
+    
+  }
+  
+  /* Texto con tamaño mediano y espaciado */
+  .text {
+    font-size: 1.2rem;
+    margin-bottom: 40px;
+    line-height: 1.6;
+    color: rgb(0, 0, 0); /* Color del texto */
+  }
+  
+  /* Contenedor de botones con espacio */
+  .button-container {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+  }
+  
+  /* Botones azules, redondeados y con un diseño atractivo */
+  .button {
+    padding: 12px 30px;
+    background-color: #2196f3;
+    color: rgb(0, 0, 0);
+    border-radius: 25px;
+    font-weight: bold;
+    text-transform: none;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s, transform 0.2s;
+  }
+  
+  .button:hover {
+    background-color: #1976d2;
+    transform: translateY(-2px);
+  }
+  
+
+  .app-container {
+    display: flex;
+    flex-direction: column;
+  }
+
+ 

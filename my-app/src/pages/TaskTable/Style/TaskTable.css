@@ -1,0 +1,51 @@
+
+  
+  .taskTableContainerTT .taskTableTT .taskTableHeadTT {
+    background-color: #1976d2;
+  }
+  
+  .taskRow:hover {
+    background-color: #e3f2fd;
+    cursor: pointer;
+  }
+  
+  .taskPriorityHighTT {
+    color: #d32f2f !important;
+    font-weight: bold !important;
+  }
+  
+  .taskPriorityMediumTT {
+    color: #f9a825 !important;
+    font-weight: bold !important;
+  }
+  
+  .taskPriorityLowTT {
+    color: #388e3c !important;
+    font-weight: bold !important;
+  }
+
+  .iconNumber1{
+    color: #194b2d;
+  }
+  
+/* Estilos para el contenedor principal */
+.tableClassDiv {
+    display: flex;
+    justify-content: center; /* Centra horizontalmente */
+    align-items: flex-start; /* Alinea al principio del contenedor (para evitar que se centre verticalmente) */
+    min-height: calc(100vh - 50px); /* Resta la altura de la barra de navegación */
+    padding-top: 50px; /* Da espacio arriba para la barra de navegación */
+    width: 100%; /* Asegúrate de que el contenedor ocupe todo el ancho disponible */
+}
+
+/* Contenedor de la tabla */
+.tableDivCont {
+    width: 80%; /* Ajusta el ancho según lo necesites */
+    max-width: 1200px; /* Limita el ancho máximo */
+    margin: 0 auto; /* Fuerza el centrado horizontal */
+}
+
+
+.iconAddTask{
+  color: black;
+}

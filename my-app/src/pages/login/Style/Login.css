@@ -1,0 +1,82 @@
+/* Estilos para el contenedor principal */
+.login-container {
+  display: flex;
+  flex-direction: column; /* Asegura que los elementos se apilen de forma vertical */
+  justify-content: flex-start;
+  align-items: center; /* Centra los elementos horizontalmente */
+  min-height: 100vh;
+}
+
+/* Estilos para el formulario de login */
+.login-form {
+  margin-top: 100px;
+  display: flex;
+  flex-direction: column; /* Asegura que los elementos dentro del formulario se apilen verticalmente */
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  max-width: 400px;
+  padding: 20px;
+  background-color: rgb(255, 255, 255);
+  border-radius: 8px;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Centrar el título */
+.title {
+  font-size: 2rem;
+  margin-bottom: 20px;
+  text-align: center; /* Centrar el texto */
+}
+
+/* Centrar el texto descriptivo */
+.text {
+  font-size: 1.1rem;
+  margin-bottom: 20px;
+  text-align: center; /* Centrar el texto */
+}
+
+.login-form{
+  padding-bottom: 60px;
+}
+
+/* Centrar los campos de entrada y etiquetas */
+.login-form .MuiTextField-root {
+  width: 100%;
+  margin-bottom: 15px; /* Espaciado entre los campos */
+}
+
+/* Estilos para el contenedor del botón */
+.button-container-form {
+  margin-top: 20px;
+  width: 90%; /* Asegura que el botón ocupe todo el ancho disponible */
+  display: flex;
+  justify-content: center;
+
+}
+
+/* Estilos para el botón */
+.login-form .button {
+  width: 100%;
+  padding: 10px;
+  background-color: #2196f3;
+  color: rgb(36, 34, 34);
+  font-weight: bold;
+  transition: background-color 0.3s, transform 0.2s;
+  width: 90%; 
+}
+
+/* Efecto hover para el botón */
+.login-form .button:hover {
+  background-color: #1976d2;
+  transform: translateY(-2px);
+}
+
+
+
+.formBigContainer{
+  display: flex;
+  flex-direction: column; /* Asegura que los elementos dentro del formulario se apilen verticalmente */
+  justify-content: center;
+  align-items: center;
+}
