@@ -18,7 +18,7 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 const pages = [
   { name: 'Inicio', path: '/homeLogged' },
   { name: 'Tareas', path: '/homeLogged/todolist' },
-  { name: 'Galeria', path: '/login' }, ];
+  { name: 'Galeria', path: '/homeLogged/photogallery' }, ];
 const settings = [
   { name: 'Perfil', path: '/login' },
   { name: 'Cerrar Sesion', path: '/' },];

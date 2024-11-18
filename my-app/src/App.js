@@ -9,6 +9,7 @@ import client from './config/apolloClient';
 import CreateNewItem from './pages/CreateNewItem/Component/CreateNewItem.js';
 import EditItem from './pages/EditItem/Component/EditItem.js';
 import TaskTable from "./pages/TaskTable/Component/TaskTable.js";
+import PhotoGallery from './pages/PhotoGallery/Component/PhtoGallery.js'
 
 
 
@@ -17,6 +18,7 @@ const App = () => {
     <ApolloProvider client={client}>
       <Router>
         <Routes>
+          <Route path="/homeLogged/photogallery" element={<PhotoGallery />} />
           <Route path="/homeLogged/todolist" element={<TaskTable />} />
           <Route path="/homeLogged/todolist/edititem/:id" element={<EditItem />} />
           <Route path="/homeLogged/todolist/createnewitem" element={<CreateNewItem />} />

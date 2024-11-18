@@ -1,0 +1,12 @@
+.card-container {
+    display: flex;
+    flex-wrap: wrap; /* Permite que las cards se ajusten a varias filas */
+    justify-content: center; /* Centra las cards horizontalmente */
+    gap: 16px; /* Espacio entre las cards */
+    padding: 16px;
+  }
+  
+  .card-item {
+    width: 300px; /* Ancho fijo para las cards */
+  }
+  
