@@ -1,3 +1,4 @@
+// src/components/TaskTable.js
 import React, { useState, useEffect } from "react";
 import {
   Table,
@@ -10,22 +11,32 @@ import {
   IconButton,
   Paper,
 } from "@mui/material";
-import { Visibility, Edit, Delete, Add } from "@mui/icons-material"; // Importamos íconos
+import { Edit, Delete, Add, Visibility } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import "../Style/TaskTable.css";
 import ResponsiveAppBarLogged from '../../../assets/ResponsiveAppBarLogged';
-import { useQuery, gql } from "@apollo/client";
-import { GET_TODOLIST_ID, GET_ITEMS } from '../Query/TaskTableQuery';
-
+import { useQuery, gql, useMutation } from "@apollo/client";
+import { GET_TODOLIST_ID, GET_ITEMS, DELETE_ITEM } from '../Query/TaskTableQuery';
+import { Dialog, DialogActions, DialogContent, DialogTitle, Button } from '@mui/material';
+import TaskDetailsDialog from './TaskDetailsDialog'; // Importa el nuevo componente
 
 const TaskTable = () => {
   const navigate = useNavigate();
-  const userId = localStorage.getItem("userId"); // Obtener el ID del usuario desde el localStorage
+  const userId = localStorage.getItem("userId");
   const [idTodolist, setIdTodolist] = useState(null);
+  const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
+  const [openDetailsDialog, setOpenDetailsDialog] = useState(false); // Estado para el diálogo de detalles
+  const [selectedTask, setSelectedTask] = useState(null);
+  const [tasks, setTasks] = useState([]);
 
   const { data: todoListData, loading: loadingTodolist, error: errorTodolist } = useQuery(GET_TODOLIST_ID, {
     variables: { userId: parseInt(userId) },
-    skip: !userId, // ejecuta la consulta si el ID del usuario está disponible
+    skip: !userId,
+  });
+
+  const { data, loading, error } = useQuery(GET_ITEMS, {
+    variables: { id_todolist: idTodolist },
+    skip: !idTodolist,
   });
 
   useEffect(() => {
@@ -34,20 +45,10 @@ const TaskTable = () => {
     }
   }, [todoListData]);
 
-  // Obtener los items de la lista de tareas 
-  const { loading, error, data } = useQuery(GET_ITEMS, {
-    variables: { id_todolist: idTodolist },
-    skip: !idTodolist, 
-  });
-
-  const [tasks, setTasks] = useState([]);
-
-
   useEffect(() => {
-    // Cuando los datos se obtienen de la query, los asignamos al estado 'tasks'
     if (data && data.item) {
       const fetchedTasks = data.item.map((item) => ({
-        id: item.id_item, // Aquí asumimos que 'id_todolist' es el identificador único
+        id: item.id_item,
         title: item.name_item,
         description: item.description_item,
         status: item.state_item,
@@ -58,7 +59,6 @@ const TaskTable = () => {
     }
   }, [data]);
 
-  // Manejar cambio de selección
   const handleSelect = (id) => {
     setTasks((prevTasks) =>
       prevTasks.map((task) =>
@@ -67,13 +67,48 @@ const TaskTable = () => {
     );
   };
 
+  const handleOpenConfirmDialog = (task) => {
+    setSelectedTask(task);
+    setOpenConfirmDialog(true);
+  };
+
+  const handleCloseConfirmDialog = () => {
+    setOpenConfirmDialog(false);
+    setSelectedTask(null);
+  };
+
+  const handleOpenDetailsDialog = (task) => {
+    setSelectedTask(task);
+    setOpenDetailsDialog(true); // Abre el diálogo de detalles
+  };
+
+  const handleCloseDetailsDialog = () => {
+    setOpenDetailsDialog(false); // Cierra el diálogo de detalles
+    setSelectedTask(null);
+  };
+
+  const [deleteItem] = useMutation(DELETE_ITEM, {
+    onCompleted: () => {
+      setTasks((prevTasks) => prevTasks.filter((task) => task.id !== selectedTask.id));
+      handleCloseConfirmDialog();
+    },
+    onError: (error) => {
+      console.error("Error al eliminar la tarea:", error.message);
+    },
+  });
+
+  const handleDeleteTask = () => {
+    if (selectedTask) {
+      deleteItem({ variables: { id_item: selectedTask.id } });
+    }
+  };
+
   if (loadingTodolist || loading) return <p>Loading...</p>;
   if (errorTodolist || error) return <p>Error: {error.message}</p>;
 
   return (
     <div>
       <ResponsiveAppBarLogged />
-
       <div className='tableClassDiv tableDivCont'>
         <TableContainer component={Paper} className="taskTableContainerTT">
           <Table className="taskTableTT">
@@ -86,18 +121,17 @@ const TaskTable = () => {
                 <TableCell>Prioridad</TableCell>
                 <TableCell>
                   Acciones
-                  <span style={{ marginLeft: "10px" }}> {/* Espacio entre "Acciones" e ícono */}
+                  <span style={{ marginLeft: "10px" }}>
                     <IconButton
                       color="default"
                       onClick={() => navigate("/homeLogged/todolist/createnewitem")}
                       aria-label="Agregar tarea"
-                      style={{ color: "black" }} // Aseguramos que el ícono sea negro
+                      style={{ color: "black" }}
                     >
                       <Add />
                     </IconButton>
                   </span>
                 </TableCell>
-
               </TableRow>
             </TableHead>
             <TableBody>
@@ -105,7 +139,7 @@ const TaskTable = () => {
                 <TableRow
                   key={task.id}
                   style={{
-                    backgroundColor: task.selected ? "#006400" : "",
+                    backgroundColor: task.selected ? "#ADD8E6" : "",
                     color: task.selected ? "#fff" : "",
                   }}
                   className="taskRow"
@@ -120,34 +154,27 @@ const TaskTable = () => {
                   <TableCell>{task.title}</TableCell>
                   <TableCell>{task.description}</TableCell>
                   <TableCell>{task.status}</TableCell>
-                  <TableCell
-                    className={`${task.priority === "Alta"
-                      ? "taskPriorityHighTT"
-                      : task.priority === "Media"
-                        ? "taskPriorityMediumTT"
-                        : "taskPriorityLowTT"
-                      }`}
-                  >
+                  <TableCell className={`taskPriority${task.priority}`}>
                     {task.priority}
                   </TableCell>
                   <TableCell>
                     <IconButton
                       color="primary"
-                      onClick={() => navigate("/")}
+                      onClick={() => handleOpenDetailsDialog(task)} // Abre el diálogo de detalles
                       aria-label="Ver tarea"
                     >
-                      <Visibility />
+                      <Visibility /> {/* Icono de ver */}
                     </IconButton>
                     <IconButton
                       color="secondary"
                       onClick={() => navigate(`/homeLogged/todolist/edititem/${task.id}`)}
                       aria-label="Editar tarea"
                     >
-                      <Edit className="iconNumber1" />
+                      <Edit />
                     </IconButton>
                     <IconButton
                       color="error"
-                      onClick={() => navigate("/")}
+                      onClick={() => handleOpenConfirmDialog(task)}
                       aria-label="Borrar tarea"
                     >
                       <Delete />
@@ -159,6 +186,29 @@ const TaskTable = () => {
           </Table>
         </TableContainer>
       </div>
+
+      {/* Diálogo de confirmación para eliminar tarea */}
+      <Dialog open={openConfirmDialog} onClose={handleCloseConfirmDialog}>
+        <DialogTitle>Confirmación</DialogTitle>
+        <DialogContent>
+          <p>¿Estas seguro de que desea eliminar este item?</p>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseConfirmDialog} color="primary">
+            Cancelar
+          </Button>
+          <Button onClick={handleDeleteTask} color="primary">
+            Eliminar
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Diálogo de detalles de la tarea */}
+      <TaskDetailsDialog
+        open={openDetailsDialog}
+        onClose={handleCloseDetailsDialog}
+        task={selectedTask}
+      />
     </div>
   );
 };

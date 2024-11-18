@@ -19,3 +19,12 @@ export const GET_ITEMS = gql`
     }
   }
 `;
+
+export const DELETE_ITEM = gql`
+  mutation DeleteItem($id_item: Int!) {
+    delete_item_by_pk(id_item: $id_item) {
+      id_item
+      name_item
+    }
+  }
+`;
