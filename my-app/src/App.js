@@ -12,6 +12,7 @@ import TaskTable from "./pages/TaskTable/Component/TaskTable.js";
 import PhotoGalleryList from './pages/PhotoGallery/Component/PhotoGalleryList.js'
 import CreateNewPhoto from './pages/CreateNewPhoto/Component/CreateNewPhoto.js'
 import EditPhoto from './pages/EditPhoto/Component/EditPhoto.js'
+import CreateNewUser from './pages/CreateNewUser/Component/CreateNewUser.js'
 
 
 
@@ -27,6 +28,8 @@ const App = () => {
           <Route path="/homeLogged/todolist/createnewitem" element={<CreateNewItem />} />
           <Route path="/homeLogged/photogallery/createphoto" element={<CreateNewPhoto />} />
           <Route path="/homeLogged/photogallery/editphoto/:id" element={<EditPhoto />} />
+          <Route path="/login/register" element={<CreateNewUser />} />
+
 
 
 
