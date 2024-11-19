@@ -5,7 +5,6 @@ DROP TYPE IF EXISTS state_user;
 DROP TYPE IF EXISTS priority_item;
 
 
-
 -- Crear tipo ENUM para el estado de los ítems
 CREATE TYPE state_item AS ENUM ('undone', 'done', 'in_process');
 
@@ -61,6 +60,4 @@ CREATE TABLE photo (
     id_photogallery INT NOT NULL,
     CONSTRAINT fk_photoGallery_photo FOREIGN KEY (id_photogallery) REFERENCES photoGallery(id_photogallery)
 );
-
-
 */
