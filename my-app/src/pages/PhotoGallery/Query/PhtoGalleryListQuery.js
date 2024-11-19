@@ -17,3 +17,12 @@ export const GET_PHOTOS = gql`
     }
   }
 `;
+
+export const DELETE_PHOTO = gql`
+  mutation DeletePhoto($id_photo: Int!) {
+    delete_photo_by_pk(id_photo: $id_photo) {
+      id_photo
+      content_photo
+    }
+  }
+`;
