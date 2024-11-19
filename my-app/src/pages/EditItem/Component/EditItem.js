@@ -15,6 +15,11 @@ const EditItem = () => {
   const [priority, setPriority] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const userId = localStorage.getItem("userId");
+
+  const { loading: loadingUserId, error: userError, data: userData } = useQuery(GET_TODOLIST_ID, {
+    variables: { userId: parseInt(userId) }, 
+  });
 
   const { data, loading: queryLoading, error: queryError } = useQuery(GET_ITEM_BY_ID, {
     variables: { id: parseInt(id) },
@@ -24,7 +29,7 @@ const EditItem = () => {
     update: (cache, { data: { update_item_by_pk } }) => {
       if (!update_item_by_pk) return;
   
-      const idTodolist = 1; // Usa el ID correcto si lo obtienes dinámicamente
+      const idTodolist = userData?.users[0]?.id_todolist; // Usa el ID correcto si lo obtienes dinámicamente
       const existingItems = cache.readQuery({
         query: GET_ITEMS,
         variables: { id_todolist: idTodolist },
@@ -75,7 +80,7 @@ const EditItem = () => {
       description_item: taskDescription,
       state_item: status,
       priority_item: priority,
-      id_todolist: 1,
+      id_todolist: userData?.users[0]?.id_todolist,
     });
 
     try {
@@ -86,7 +91,7 @@ const EditItem = () => {
           description_item: taskDescription,
           state_item: status,
           priority_item: priority,
-          id_todolist: 1,
+          id_todolist: userData?.users[0]?.id_todolist,
         },
       });
 

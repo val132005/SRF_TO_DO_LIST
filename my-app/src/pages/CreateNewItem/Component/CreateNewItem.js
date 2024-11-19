@@ -58,7 +58,7 @@ const CreateNewItem = () => {
     }
 
     try {
-      // Ejecutamos la mutación pasando las variables necesarias
+      // Ejecutamos la mutación pasando las variables necesarias 
       const { data } = await createItem({
         variables: {
           name_item: taskTitle,

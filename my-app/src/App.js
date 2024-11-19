@@ -9,7 +9,10 @@ import client from './config/apolloClient';
 import CreateNewItem from './pages/CreateNewItem/Component/CreateNewItem.js';
 import EditItem from './pages/EditItem/Component/EditItem.js';
 import TaskTable from "./pages/TaskTable/Component/TaskTable.js";
-import PhotoGallery from './pages/PhotoGallery/Component/PhtoGallery.js'
+import PhotoGalleryList from './pages/PhotoGallery/Component/PhotoGalleryList.js'
+import CreateNewPhoto from './pages/CreateNewPhoto/Component/CreateNewPhoto.js'
+import EditPhoto from './pages/EditPhoto/Component/EditPhoto.js'
+
 
 
 
@@ -18,10 +21,14 @@ const App = () => {
     <ApolloProvider client={client}>
       <Router>
         <Routes>
-          <Route path="/homeLogged/photogallery" element={<PhotoGallery />} />
+          <Route path="/homeLogged/photogallery" element={<PhotoGalleryList />} />
           <Route path="/homeLogged/todolist" element={<TaskTable />} />
           <Route path="/homeLogged/todolist/edititem/:id" element={<EditItem />} />
           <Route path="/homeLogged/todolist/createnewitem" element={<CreateNewItem />} />
+          <Route path="/homeLogged/photogallery/createphoto" element={<CreateNewPhoto />} />
+          <Route path="/homeLogged/photogallery/editphoto/:id" element={<EditPhoto />} />
+
+
 
           <Route path="/" element={<HomeNonLogged />} />
           <Route path="/login" element={<Login />} />
