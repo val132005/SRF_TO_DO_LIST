@@ -13,36 +13,35 @@ import {
 import { Edit, Delete, Add, Visibility } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import "../Style/TaskTable.css";
-import ResponsiveAppBarLogged from '../../../assets/ResponsiveAppBarLogged';
+import ResponsiveAppBarLogged from "../../../assets/ResponsiveAppBarLogged";
 import { useQuery, gql, useMutation } from "@apollo/client";
-import { GET_TODOLIST_ID, GET_ITEMS, DELETE_ITEM } from '../Query/TaskTableQuery';
-import TaskDetailsDialog from './TaskDetailsDialog'; // Importa el nuevo componente
-import DeleteTaskDialog from './DeleteTaskDialog'; // Importa el nuevo componente de diálogo para eliminar tarea
+import {
+  GET_TODOLIST_ID,
+  GET_ITEMS,
+  DELETE_ITEM
+} from "../Query/TaskTableQuery";
+import TaskDetailsDialog from "./TaskDetailsDialog"; // Importa el nuevo componente
+import DeleteTaskDialog from "./DeleteTaskDialog"; // Importa el nuevo componente de diálogo para eliminar tarea
 
 const TaskTable = () => {
   const navigate = useNavigate();
   const userId = localStorage.getItem("userId");
+  const id_todolistl = localStorage.getItem("id_todolist");
   const [idTodolist, setIdTodolist] = useState(null);
   const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
   const [openDetailsDialog, setOpenDetailsDialog] = useState(false); // Estado para el diálogo de detalles
   const [selectedTask, setSelectedTask] = useState(null);
   const [tasks, setTasks] = useState([]);
 
-  const { data: todoListData, loading: loadingTodolist, error: errorTodolist } = useQuery(GET_TODOLIST_ID, {
-    variables: { userId: parseInt(userId) },
-    skip: !userId,
-  });
+  console.log(id_todolistl);
+  console.log(userId)
+
+  
 
   const { data, loading, error } = useQuery(GET_ITEMS, {
-    variables: { id_todolist: idTodolist },
-    skip: !idTodolist,
+    variables: { id_todolist: id_todolistl },
+    skip: !id_todolistl,
   });
-
-  useEffect(() => {
-    if (todoListData && todoListData.users.length > 0) {
-      setIdTodolist(todoListData.users[0].id_todolist);
-    }
-  }, [todoListData]);
 
   useEffect(() => {
     if (data && data.item) {
@@ -100,13 +99,11 @@ const TaskTable = () => {
     deleteItem({ variables: { id_item: task.id } });
   };
 
-  if (loadingTodolist || loading) return <p>Loading...</p>;
-  if (errorTodolist || error) return <p>Error: {error.message}</p>;
-
+  
   return (
     <div>
       <ResponsiveAppBarLogged />
-      <div className='tableClassDiv tableDivCont'>
+      <div className="tableClassDiv tableDivCont">
         <TableContainer component={Paper} className="taskTableContainerTT">
           <Table className="taskTableTT">
             <TableHead className="taskTableHeadTT">

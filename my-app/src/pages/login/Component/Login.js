@@ -3,15 +3,20 @@ import { useApolloClient, gql } from "@apollo/client";
 import { TextField, Button, Container, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import ResponsiveAppBarNormal from '../../../assets/ResponsiveAppBarNonLogged';
-import '../Style/Login.css'; 
-import { LOGIN_QUERY } from '../Query/LoginQuery';
+import '../Style/Login.css';
+import { LOGIN_QUERY, GET_TODOLIST_ID, GET_PHOTOGALLERY_ID } from '../Query/LoginQuery';
 
-const Login = ()=> {
+const Login = () => {
   const [document_user, setDocument_user] = useState("");
   const [password_user, setPassword_user] = useState("");
   const [error, setError] = useState("");
   const client = useApolloClient();
   const navigate = useNavigate();
+  const [id_user, setId_user] = useState(null);
+  const [id_todolist, setId_todolist] = useState(null);
+
+
+
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -25,9 +30,36 @@ const Login = ()=> {
         query: LOGIN_QUERY,
         variables: { document_user, password_user },
       });
-      if (data.users.length > 0) {
-        const userId = data.users[0].id_user;
-        localStorage.setItem("userId", userId);
+      if (data.userr.length > 0) {
+        const loggedUser = data.userr[0]; 
+        const { id_user} = loggedUser;
+
+        // Guardar valores en localStorage
+        localStorage.setItem("userId", id_user);
+        
+        const { data: todoListData } = await client.query({
+          query: GET_TODOLIST_ID,
+          variables: { userId: id_user },
+        });
+  
+        if (todoListData.todolist.length > 0) {
+          const { id_todolist } = todoListData.todolist[0];
+          localStorage.setItem("id_todolist", id_todolist);
+        }
+  
+        // Obtiene el ID de la galería de fotos asociada
+        const { data: photoGalleryData } = await client.query({
+          query: GET_PHOTOGALLERY_ID,
+          variables: { userId: id_user },
+        });
+  
+        if (photoGalleryData.photogallery.length > 0) {
+          const { id_photogallery } = photoGalleryData.photogallery[0];
+          localStorage.setItem("id_photogallery", id_photogallery);
+        }
+
+
+
         alert("Logged in successfully!");
         navigate("/HomeLogged/");
       } else {
@@ -54,10 +86,10 @@ const Login = ()=> {
             name="document_user"
             value={document_user}
             onChange={(e) => setDocument_user(e.target.value)}
-            className="MuiTextField-root" 
+            className="MuiTextField-root"
             sx={{ width: '80%', marginBottom: '15px' }}
           />
-          
+
           <TextField
             required
             label="Contraseña"
@@ -68,20 +100,20 @@ const Login = ()=> {
             onChange={(e) => setPassword_user(e.target.value)}
             className="MuiTextField-root" // Asegura que el estilo de texto se aplique
           />
-          
+
           {error && <Typography color="error" variant="body2">{error}</Typography>}
           <div className="button-container-form">
             <Button type="submit" className="login-form button" sx={{ backgroundColor: '#2196f3', color: 'black' }}>
               Iniciar sesión
             </Button>
           </div>
-        </form>  
+        </form>
 
         <div className="register-link">
           <Typography variant="body2" color="textSecondary">
-            ¿No tienes cuenta? 
-            <Button 
-              onClick={() => navigate('/login/register')} 
+            ¿No tienes cuenta?
+            <Button
+              onClick={() => navigate('/login/register')}
               sx={{ textTransform: 'none', paddingLeft: '5px' }}
             >
               Regístrate aquí

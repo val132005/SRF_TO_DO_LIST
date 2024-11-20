@@ -1,92 +1,80 @@
 import React, { useState } from 'react';
 import { TextField, Button, MenuItem, Select, FormControl, InputLabel, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import { gql, useMutation, useQuery} from '@apollo/client';
+import { gql, useMutation, useQuery } from '@apollo/client';
 import ResponsiveAppBarNormal from '../../../assets/ResponsiveAppBarLogged';
 import '../Style/CreateNewItem.css';
 import { CREATE_ITEM_MUTATION } from '../Query/CreateNerItemQuery';
 import { GET_ITEMS, GET_TODOLIST_ID } from '../../TaskTable/Query/TaskTableQuery';
-
-
-
 
 const CreateNewItem = () => {
   const [taskTitle, setTaskTitle] = useState("");
   const [taskDescription, setTaskDescription] = useState("");
   const [status, setStatus] = useState("");
   const [priority, setPriority] = useState("");
-  const [error, setError] = useState("");
+  const [formError, setFormError] = useState(""); // Renamed this to formError
   const navigate = useNavigate();
   const userId = localStorage.getItem("userId");
+  const id_todolistl = localStorage.getItem("id_todolist");
+  console.log("idToDolist:", id_todolistl);
 
-  const { loading: loadingUserId, error: userError, data: userData } = useQuery(GET_TODOLIST_ID, {
-    variables: { userId: parseInt(userId) }, 
+  const { data, loading: loadingItems, error: queryError } = useQuery(GET_ITEMS, {
+    variables: { id_todolist: id_todolistl },
+    skip: !id_todolistl,
   });
 
-  const { loading: loadingItems, error: itemsError, data: itemsData } = useQuery(GET_ITEMS, {
-    variables: { id_todolist: userData?.users[0]?.id_todolist },
-    skip: loadingUserId || !userData, // No ejecutar la consulta hasta que tengamos el userId
-  });
-
-
-
-  const [createItem, { loading, error: mutationError }] = useMutation(CREATE_ITEM_MUTATION, {
+  const [createItem, { loading: loadingCreateItem, error: mutationError }] = useMutation(CREATE_ITEM_MUTATION, {
     update(cache, { data: { insert_item_one } }) {
-      if (itemsData && itemsData.item) {
+      if (data && data.item) {
         const newItem = insert_item_one;
-        const existingItems = itemsData.item || [];
+        const existingItems = data.item || [];
 
-        // Actualiza el caché con el nuevo item
         cache.writeQuery({
           query: GET_ITEMS,
-          variables: { id_todolist: userData?.users[0]?.id_todolist },
+          variables: { id_todolist: id_todolistl },
           data: {
             item: [...existingItems, newItem],
           },
         });
       }
     },
-    refetchQueries: [{ query: GET_ITEMS, variables: { id_todolist: userData?.users[0]?.id_todolist } }],
+    refetchQueries: [{ query: GET_ITEMS, variables: { id_todolist: id_todolistl } }],
   });
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
 
+    // Asegúrate de que todos los campos estén completos
     if (!taskTitle || !taskDescription || !status || !priority) {
-      setError("Please fill out all fields.");
+      setFormError("Please fill out all fields."); // Updated to formError
       return;
     }
 
     try {
-      // Ejecutamos la mutación pasando las variables necesarias 
+      // Ejecutamos la mutación pasando las variables necesarias
       const { data } = await createItem({
         variables: {
           name_item: taskTitle,
           description_item: taskDescription,
-          state_item: status,   // Asegúrate de que estos valores coincidan con los valores esperados por tu GraphQL API
+          state_item: status,
           priority_item: priority,
-          id_todolist: userData?.users[0]?.id_todolist, // Asumiendo que el ID del todo list es 1, reemplaza esto con el ID correspondiente si es necesario
+          id_todolist: id_todolistl,
         },
-        
       });
 
       if (data) {
-        // Si la mutación es exitosa, redirigimos o mostramos un mensaje
         alert("Task created successfully!");
-        navigate("/HomeLogged/todolist"); // Redirige a la página de inicio
+        navigate('/homeLogged/todolist');
       } else {
-        setError("There was an error creating the task.");
+        setFormError("There was an error creating the task."); // Updated to formError
       }
     } catch (err) {
-      setError("There was an error creating the task.");
+      setFormError("There was an error creating the task."); // Updated to formError
       console.error(err);
     }
-
-
   };
 
-  if (loadingUserId || loadingItems) return <p>Loading...</p>;
-
+  if (loadingItems) return <p>Loading...</p>;
 
   return (
     <div className="task-form-container">
@@ -95,7 +83,7 @@ const CreateNewItem = () => {
         <h1 className="title">Crear Tarea</h1>
         <p className="text">Por favor, ingresa los detalles de la tarea</p>
 
-        <form onSubmit={handleFormSubmit} className='formBigContainer'>
+        <form onSubmit={handleFormSubmit} className="formBigContainer">
           <TextField
             required
             label="Título de la tarea"
@@ -146,12 +134,12 @@ const CreateNewItem = () => {
             </Select>
           </FormControl>
 
-          {error && <Typography color="error" variant="body2">{error}</Typography>}
+          {formError && <Typography color="error" variant="body2">{formError}</Typography>} {/* Updated to formError */}
           {mutationError && <Typography color="error" variant="body2">{mutationError.message}</Typography>} {/* Mostrar el error de la mutación */}
 
           <div className="button-container-form">
             <Button type="submit" className="task-form button" sx={{ backgroundColor: '#2196f3', color: 'black' }}>
-              {loading ? 'Creando tarea...' : 'Crear tarea'}
+              {loadingCreateItem ? 'Creando tarea...' : 'Crear tarea'}
             </Button>
           </div>
         </form>

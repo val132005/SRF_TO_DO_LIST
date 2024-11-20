@@ -1,12 +1,6 @@
 import { gql } from '@apollo/client';
 
-export const GET_TODOLIST_ID = gql`
-  query GetTodoListId($userId: Int!) {
-    users(where: { id_user: { _eq: $userId } }) {
-      id_todolist
-    }
-  }
-`;
+
 
 export const GET_ITEMS = gql`
   query GetItems($id_todolist: Int!) {
@@ -28,3 +22,13 @@ export const DELETE_ITEM = gql`
     }
   }
 `;
+
+export const GET_TODOLIST_ID = gql`
+  query GetTodoListId($userId: Int!) {
+    todolist(where: { id_user: { _eq: $userId } }) {
+      id_todolist
+    }
+  }
+`;
+
+

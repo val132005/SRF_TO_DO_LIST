@@ -14,6 +14,7 @@ const PhotoGalleryList = () => {
   const [selectedPhoto, setSelectedPhoto] = useState(null);
   const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
 
+
   // Obtener ID de la galería
   const { data: galleryData, loading: galleryLoading, error: galleryError } = useQuery(GET_PHOTOGALLERY_ID, {
     variables: { userId },
