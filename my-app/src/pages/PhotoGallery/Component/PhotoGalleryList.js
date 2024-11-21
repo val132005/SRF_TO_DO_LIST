@@ -1,7 +1,7 @@
 // PhotoGalleryList.js
 import React, { useEffect, useState } from 'react';
 import { useQuery, useMutation } from '@apollo/client';
-import { Card, CardMedia, Button } from '@mui/material';
+import { Card, Button } from '@mui/material';
 import { GET_PHOTOGALLERY_ID, GET_PHOTOS, DELETE_PHOTO } from '../Query/PhtoGalleryListQuery';
 import ResponsiveAppBarLogged from '../../../assets/ResponsiveAppBarLogged';
 import { useNavigate } from 'react-router-dom';
@@ -13,7 +13,6 @@ const PhotoGalleryList = () => {
   const [photos, setPhotos] = useState([]);
   const [selectedPhoto, setSelectedPhoto] = useState(null);
   const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
-
 
   // Obtener ID de la galería
   const { data: galleryData, loading: galleryLoading, error: galleryError } = useQuery(GET_PHOTOGALLERY_ID, {
@@ -53,31 +52,39 @@ const PhotoGalleryList = () => {
       <ResponsiveAppBarLogged />
       <div
         style={{
-          display: 'flex',
-          flexWrap: 'wrap',
+          display: 'grid',
+          gridTemplateColumns: 'repeat(3, 1fr)',
           gap: '16px',
           padding: '16px',
-          margin: '50px',
+          margin: '50px auto',
+          maxWidth: '1200px', // Centrar y limitar el ancho del contenedor
         }}
       >
         {photos.map((photo) => (
           <Card
             key={photo.id_photo}
             style={{
-              flex: '1 1 calc(33.333% - 16px)',
               cursor: 'pointer',
               border: selectedPhoto === photo ? '3px solid #1976d2' : 'none',
               boxShadow: selectedPhoto === photo ? '0px 4px 12px rgba(0, 0, 0, 0.2)' : 'none',
               transition: 'transform 0.5s, box-shadow 0.3s',
               transform: selectedPhoto === photo ? 'scale(1.02)' : 'none',
+              height: '300px', // Altura fija del contenedor
+              display: 'flex', // Usamos flexbox para centrar
+              justifyContent: 'center',
+              alignItems: 'center',
+              backgroundColor: 'black',
             }}
             onClick={() => setSelectedPhoto(photo)}
           >
-            <CardMedia
-              component="img"
-              height="140"
-              image={photo.content_photo}
+            <img
+              src={photo.content_photo}
               alt={`Photo ${photo.id_photo}`}
+              style={{
+                maxHeight: '100%', // La imagen no puede exceder la altura del contenedor
+                maxWidth: '100%', // La imagen no puede exceder el ancho del contenedor
+                objectFit: 'contain', // Escala la imagen manteniendo la proporción
+              }}
             />
           </Card>
         ))}
