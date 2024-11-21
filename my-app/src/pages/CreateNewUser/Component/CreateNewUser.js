@@ -117,7 +117,7 @@ const CreateNewUser = () => {
             sx={{ width: '80%', marginBottom: '15px' }}
           />
 
-          <FormControl required sx={{ width: '80%', marginBottom: '15px' }}>
+          <FormControl required sx={{ width: '100%', marginBottom: '15px' }}>
             <InputLabel id="estado-user-label">Estado</InputLabel>
             <Select
               labelId="estado-user-label"
@@ -146,7 +146,7 @@ const CreateNewUser = () => {
 
           <div className="button-container-form">
             <Button
-              type="submit"
+              type="submit" className="login-form button"
               sx={{ backgroundColor: '#2196f3', color: 'white' }}
             >
               Registrarme
